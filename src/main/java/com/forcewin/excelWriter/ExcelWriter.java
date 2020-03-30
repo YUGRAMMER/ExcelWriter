@@ -15,6 +15,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.forcewin.excelWriter.vo.ExcelCellVO;
 import com.forcewin.excelWriter.vo.ExcelFileVO;
 import com.forcewin.excelWriter.vo.ExcelRowVO;
 import com.forcewin.excelWriter.vo.ExcelSheetVO;
@@ -30,9 +31,9 @@ public class ExcelWriter {
 	 * @return workbook
 	 * @throws Exception
 	 */
-	public void createExcel(ExcelFileVO excelfileVO)throws Exception{
+	public void createExcel(XSSFWorkbook workbook,ExcelFileVO excelfileVO)throws Exception{
 		
-		XSSFWorkbook workbook = new XSSFWorkbook();
+		//XSSFWorkbook workbook = new XSSFWorkbook();
 		List<ExcelSheetVO> sheetList = excelfileVO.getSheetList();
 		
 		if( sheetList == null ) {
@@ -51,21 +52,14 @@ public class ExcelWriter {
 			L2:for( ExcelRowVO excelRow : excelRowList ) {
 				Row row = sheet.createRow(++rowCount);
 				 int columnCount = 0;
-				 List<String> cellList = excelRow.getCellList();
+				 List<ExcelCellVO> cellList = excelRow.getCellList();
 				//1.셀 스타일 및 폰트 설정
-				 CellStyle headerStyle = workbook.createCellStyle();
-				 headerStyle.setBorderRight(BorderStyle.THIN);
-				 headerStyle.setBorderLeft(BorderStyle.THIN);
-				 headerStyle.setBorderTop(BorderStyle.THIN);
-				 headerStyle.setBorderBottom(BorderStyle.THIN);
-				 headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);//높이 가운데 정렬
-
 
 				 if( cellList == null ) continue L2;
-				 for( String cellString : cellList ) {
+				 for( ExcelCellVO cellVO : cellList ) {
 					 Cell cell = row.createCell(++columnCount);
-					 cell.setCellValue(cellString);
-					 cell.setCellStyle(headerStyle);
+					 cell.setCellValue(cellVO.getCellValue());
+					 if(cell.getCellStyle()!=null)cell.setCellStyle(cellVO.getCellStyle());
 	      
 				 }
 			}
